@@ -7,12 +7,17 @@ import { CreateRoleDto } from 'src/role/dto/create-role.dto';
 import { AddRoleDto } from './dto/add-role.dto';
 import { LibraryService } from 'src/library/library.service';
 import { InitWorkerDto } from './dto/init-worker.dto';
+import { AuthService } from '../auth/auth.service';
+import { TokenService } from 'src/jwt/token.service';
+import { Role } from 'src/role/role.model';
 
 @Injectable()
 export class WorkerService {
   constructor(@InjectModel(Worker) private workerRepository: typeof Worker,
               private roleService: RoleService,
-              private libraryService: LibraryService) {}
+              private libraryService: LibraryService,
+              private jwtService: TokenService
+            ) {}
   
   async createWorker(worker_dto: CreateWorkerDto, value: string, library_id: number) {
     const role = await this.roleService.getRoleByValue(value)
@@ -30,6 +35,9 @@ export class WorkerService {
   }
   async getWorkerByLogin(login: string) {
     const worker = await this.workerRepository.findOne({where: {login}})
+    if (!worker) {
+      throw new HttpException('Работник не зарегистрирован', HttpStatus.BAD_REQUEST)
+    }
     return worker
   }
   async addRole(dto: AddRoleDto) {
@@ -44,8 +52,22 @@ export class WorkerService {
   }
   async addChatId(workerId: number, chatId: number) {
     const worker = await this.workerRepository.findByPk(workerId)
-    worker.chatId = chatId
+    worker.chatId = Number(chatId)
     await worker.save()
     return worker
+  }
+  async getInitData(token:string) {
+
+    const data: {_id: number, role: number[]} = this.jwtService.verify(token)
+    const worker = await this.workerRepository.findByPk(data._id)
+    console.log(worker.roles)
+    let worker_roles: Role[] = []
+    for (let el in worker.roles) {
+      console.log(el)
+      const role = await this.roleService.getRoleByPk(Number(el)+1)
+      worker_roles.push(role)
+    }
+    console.log({worker, worker_roles})
+    return {worker, worker_roles}
   }
 }

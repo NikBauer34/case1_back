@@ -1,7 +1,6 @@
 import { AllowNull, AutoIncrement, BelongsTo, BelongsToMany, Column, DataType, Default, ForeignKey, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
-import { Item } from "src/item/item.model";
 import { Library } from "src/library/library.model";
-import { Catalog_Item } from "./catalog-item.model";
+import { Catalog_Book } from "./catalog-item.model";
 interface CatalogAttrs {
   title: string,
   type: 'private' | 'public',
@@ -23,15 +22,21 @@ export class Catalog extends Model<Catalog, CatalogAttrs> {
   @Column(DataType.STRING)
   type: 'private' | 'public'
 
-  @ForeignKey(() => Library)
+  @AllowNull(false)
+  @Column(DataType.INTEGER)
   libraryid: number
 
-  @ForeignKey(() => Catalog)
+  @AllowNull(false)
+  @Column(DataType.INTEGER)
   parent: number
 
   @Default([])
   @Column(DataType.ARRAY(DataType.INTEGER))
   children: number[]
+
+  @Default([])
+  @Column(DataType.ARRAY(DataType.INTEGER))
+  books: number[]
 
   @Default([])
   @Column(DataType.ARRAY(DataType.INTEGER))

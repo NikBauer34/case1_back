@@ -3,7 +3,6 @@ import { Library } from "src/library/library.model";
 import { Account_User } from "./account-user.model";
 import { Basket } from "src/basket/basket.model";
 import { User } from "src/user/user.model";
-import { Item } from "src/item/item.model";
 import { Rating } from "src/rating/rating.model";
 interface AccountAttrs {
   nmae: string
@@ -50,6 +49,14 @@ export class Account extends Model<Account, AccountAttrs> {
   @Default([])
   @Column(DataType.ARRAY(DataType.INTEGER))
   liked_items: number[]
+
+  @Default([])
+  @Column(DataType.ARRAY(DataType.INTEGER))
+  subscribed_books: number[]
+
+  @Default([])
+  @Column(DataType.ARRAY(DataType.INTEGER))
+  liked_books: number[]
 
   @Default([])
   @Column(DataType.ARRAY(DataType.INTEGER))

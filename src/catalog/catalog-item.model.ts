@@ -1,14 +1,14 @@
 import { Column, ForeignKey, Model, Table } from "sequelize-typescript";
 import { Catalog } from "./catalog.model";
-import { Item } from "src/item/item.model";
+import { Book } from "src/book/book.model";
 
 @Table
-export class Catalog_Item extends Model {
+export class Catalog_Book extends Model {
   @ForeignKey(() => Catalog)
   @Column
   CatalogId: number;
 
-  @ForeignKey(() => Item)
+  @ForeignKey(() => Book)
   @Column
-  ItemId: number;
+  BookId: number;
 }

@@ -1,15 +1,10 @@
-import { AllowNull, AutoIncrement, BelongsToMany, Column, DataType, Default, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
-import { Book } from "src/book/book.model";
-import { CD } from "src/cd/cd.model";
-import { Textbook } from "src/textbook/textbook.model";
-import { IItem, ItemType } from "./types/Item";
-import { Rating } from "src/rating/rating.model";
-import { Catalog } from "src/catalog/catalog.model";
-import { Catalog_Item } from "src/catalog/catalog-item.model";
+import { AllowNull, AutoIncrement, BelongsTo, BelongsToMany, Column, DataType, Default, ForeignKey, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { IBookPG, IStatus } from "src/book/types/BookStatus";
 interface ItemAttrs {
-  item: IItem,
-  type: ItemType,
-  library:number
+  title: string;
+  description: string;
+  picture_path: string[];
+  amount: {count: number, status: IStatus}[]
 }
 @Table({tableName: 'item'})
 export class Item extends Model<Item, ItemAttrs> {
@@ -18,35 +13,35 @@ export class Item extends Model<Item, ItemAttrs> {
   @Column(DataType.INTEGER)
   _id: number
 
-  @Column(DataType.INTEGER)
-  get item(): IItem {
-    return this.getDataValue('item')
-  }
-  set item(value: IItem) {
-    this.setDataValue('item', value)
-  }
+  @AllowNull(false)
+  @Column(DataType.STRING)
+  title: string
+
 
   @AllowNull(false)
   @Column(DataType.STRING)
-  type: ItemType
-  
-  @Default(0)
-  @Column(DataType.INTEGER)
-  ratings_count: number
-
-  @Default(0)
-  @Column(DataType.INTEGER)
-  mean_rating: number
-  
-  @AllowNull(false)
-  @Column(DataType.INTEGER)
-  library: number
+  description: string
 
   @Default([])
-  @Column(DataType.ARRAY(DataType.INTEGER))
-  rating: number[]
+  @Column(DataType.ARRAY(DataType.STRING))
+  picture_path: string[]
 
+  @Default('6+')
+  @Column(DataType.STRING)
+  class: `${number}` | IBookPG
   @Default([])
-  @Column(DataType.ARRAY(DataType.INTEGER))
-  catalogs: number[]
+  @Column(DataType.ARRAY(DataType.JSON))
+  amount: {count: number, status: IStatus}[]
+
+  @Default('Не укакзан')
+  @Column(DataType.STRING)
+  author: string
+
+  @Default(0)
+  @Column(DataType.INTEGER)
+  total_amount: number
+
+  @Default(0)
+  @Column(DataType.INTEGER)
+  price: number
 }

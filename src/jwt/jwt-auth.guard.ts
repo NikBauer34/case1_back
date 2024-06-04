@@ -6,7 +6,6 @@ import { WorkerService } from "src/worker/worker.service";
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
     constructor(private jwtService: JwtService,
-                private workerService: WorkerService
     ) {
     }
 
@@ -16,11 +15,10 @@ export class JwtAuthGuard implements CanActivate {
             const authHeader = req.headers.authorization;
             const bearer = authHeader.split(' ')[0]
             const token = authHeader.split(' ')[1]
-
+            console.log(req.headers.authorization)
             if (bearer !== 'Bearer' || !token) {
                 throw new UnauthorizedException({message: 'Пользователь не авторизован'})
             }
-
             const user = this.jwtService.verify(token);
             req.user = user;
             return true;

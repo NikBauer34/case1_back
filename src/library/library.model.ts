@@ -2,7 +2,6 @@ import { AllowNull, AutoIncrement, BelongsToMany, Column, DataType, Default, For
 import { Catalog } from "src/catalog/catalog.model";
 import { Account } from "src/account/account.model";
 import { Basket } from "src/basket/basket.model";
-import { Item } from "src/item/item.model";
 import { Worker } from "src/worker/worker.model";
 
 interface LibraryAttrs {
@@ -22,6 +21,10 @@ export class Library extends Model<Library, LibraryAttrs> {
   @Default([])
   @Column(DataType.ARRAY(DataType.INTEGER))
   catalogs: number[]
+
+  @Default([])
+  @Column(DataType.ARRAY(DataType.INTEGER))
+  books: number[]
 
   @Default([])
   @Column(DataType.ARRAY(DataType.INTEGER))
