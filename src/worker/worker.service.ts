@@ -60,12 +60,12 @@ export class WorkerService {
 
     const data: {_id: number, role: number[]} = this.jwtService.verify(token)
     const worker = await this.workerRepository.findByPk(data._id)
-    console.log(worker.roles)
+    console.log(worker)
     let worker_roles: Role[] = []
     for (let el in worker.roles) {
       console.log(el)
       const role = await this.roleService.getRoleByPk(Number(el)+1)
-      worker_roles.push(role)
+      if (role) worker_roles.push(role)
     }
     console.log({worker, worker_roles})
     return {worker, worker_roles}
